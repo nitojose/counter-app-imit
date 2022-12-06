@@ -1,10 +1,7 @@
 import 'dart:developer';
-
-
 import 'package:counter_iot/colors.dart';
 import 'package:counter_iot/const_file.dart';
 import 'package:counter_iot/view/Widgets/buttons.dart';
-import 'package:counter_iot/view/screens/home/home_screen.dart';
 import 'package:counter_iot/view/screens/sensor%20reading%20screen/sensor_readed_result_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +38,7 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
           ),
           iconTheme: IconThemeData(
             color: colorsList(
-                colorsList: ColorsLists.black), //change your color here
+                colorsList: ColorsLists.black),
           ),
           backgroundColor: colorsList(
             colorsList: ColorsLists.primaryAppBarColor,
@@ -51,19 +48,19 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
             preferredSize: const Size.fromHeight(40),
             child:
                 Consumer<ServerController>(builder: (context, myModel, child) {
-              return TabBar(
-                physics: const NeverScrollableScrollPhysics(),
-                indicatorColor: colorsList(colorsList: ColorsLists.black),
-                labelColor: colorsList(colorsList: ColorsLists.black),
-                onTap: (val) {
-                  myModel.changedTabCount(val);
-                },
-                dragStartBehavior: DragStartBehavior.start,
-                // isScrollable: false,
+                  return TabBar(
+                    physics: const NeverScrollableScrollPhysics(),
+                    indicatorColor: colorsList(colorsList: ColorsLists.black),
+                    labelColor: colorsList(colorsList: ColorsLists.black),
+                    onTap: (val) {
+                      myModel.changedTabCount(val);
+                    },
+                    dragStartBehavior: DragStartBehavior.start,
+                    // isScrollable: false,
 
-                tabs: [laneSensorTabHead(), junctionBoxTabHead()],
-                indicatorSize: TabBarIndicatorSize.tab,
-              );
+                    tabs: [laneSensorTabHead(), junctionBoxTabHead()],
+                    indicatorSize: TabBarIndicatorSize.tab,
+                  );
             }),
           ),
         ),
@@ -87,15 +84,15 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                             return ListView.builder(
                                 itemCount: myModelStore.lnSensorList.length + 1,
                                 itemBuilder: (cont, index) {
-                                  log(index.toString()+"index number from lane sensor builder");
+                                  log(index.toString()+" index number from lane sensor builder");
 
                                   if (index != myModelStore.lnSensorList.length) {
                                     return sensorReadingWidget(
-                                        myModelStore.lnSensorList[index].sensorType ==
+                                      myModelStore.lnSensorList[index].sensorType ==
                                                 SensorType.lnSensor
                                             ? true
                                             : false,
-                                        myModelStore.lnSensorList[index].verified,
+                                      myModelStore.lnSensorList[index].verified,
                                         index, deleteFunc: () {
                                       deleteButtonConfirmationButton(context,
                                           acceptOnPressed: () {
@@ -109,11 +106,11 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                                       });
 
                                       listNot.value = '';
-                                     myModelServer.existingValLn.removeAt(index);
+                                      myModelServer.existingValLn.removeAt(index);
                                     },
                                     //* <<<<<<<<<<< This will invoke >>>>>>>>>>>
                                     
-                                     verifyButton: () {
+                                    verifyButton: () {
                                  
                                         verifyOverDialogLN(
                                           context,
@@ -127,20 +124,17 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                                               //* this button will help to add lane sensor
                                         ? TextButton(
                                             onPressed: () {
-                                             
+
                                               //* here we just logged the tab count
                                               log(myModelServer.tabCount.toString());
 
                                               //* Specifying the sensor type by adding values to the controller
                                              
-                                              myModelServer.changeSensorType(
-                                                  sensorType:
-                                                      SensorType.lnSensor);
-                                                       log(index.toString()+"index number from lane sensor button");
-                                              log(myModelServer.sensorType.toString()+"index number from lane sensor button");
+                                              myModelServer.changeSensorType(sensorType: SensorType.lnSensor);
+                                              log(index.toString()+" index number from lane sensor button");
+                                              log(myModelServer.sensorType.toString()+" index number from lane sensor button");
                                               //*  <<<<<<< here we changing the verification status to false >>>>>>>
-                                              myModelServer.changeVerification(
-                                                  verified: false);
+                                              myModelServer.changeVerification(verified: false);
                                               //* <<<<<<<<<<<<<<< adding the value to sensor list >>>>>>>>>>>>>>>
                                             //  lnSensorList.add(
                                             //       ServerController.sn(
@@ -154,11 +148,9 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
 
                                                           myModelStore.addToLnSensor(
                                                             ServerController.sn(
-                                                      sensorCount: index,
-                                                      sensorType:
-                                                          myModelServer.sensorType,
-                                                      verified:
-                                                          myModelServer.verified)
+                                                              sensorCount: index,
+                                                              sensorType: myModelServer.sensorType,
+                                                              verified: myModelServer.verified)
                                                           );
 
                                           
@@ -178,7 +170,7 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                                                   width: 10,
                                                 ),
                                                 Text(
-                                                  "'ADD VEHICLE LANE SENSOR",
+                                                  "ADD VEHICLE LANE SENSOR",
                                                   style: TextStyle(
                                                       color: colorsList(
                                                           colorsList: ColorsLists
@@ -193,28 +185,27 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                     }),
                   ),
                 )),
-                Consumer<SensorReadResultController>(
-                  builder: (context,storageController,_) {
-                    return Positioned(
-                        bottom: 10,
-                        right: 10,
-                        child: buttonSelect(
-                            buttonType: ButtonType.redirectionButton,
-                            onTap:
-                            
-                            () {
-                              storageController.lnSensorList[storageController.lnSensorList.length-1].verified&&
-                              storageController.jnSensorList[storageController.jnSensorList.length-1].verified?
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeScreen()),
-                              ):errorMessageFromReading();
-                              // :null;
-                            },
-                            context: context));
-                  }
-                )
+
+                // Consumer<SensorReadResultController>(
+                //   builder: (context,storageController,_) {
+                //     return Positioned(
+                //         bottom: 10,
+                //         right: 10,
+                //         child: buttonSelect(
+                //             buttonType: ButtonType.redirectionButton,
+                //             onTap:() {
+                //               storageController.lnSensorList[storageController.lnSensorList.length-1].verified&&
+                //               storageController.jnSensorList[storageController.jnSensorList.length-1].verified?
+                //               Navigator.push(
+                //                 context,
+                //                 MaterialPageRoute(
+                //                     builder: (context) => const HomeScreen()),
+                //               ):errorMessageFromReading();
+                //               // :null;
+                //             },
+                //             context: context));
+                //   }
+                // )
               ],
             ),
             //! end : <<<<<<<<<<<<<<<<<<<<<<<<  LN sensor section section >>>>>>>>>>>>>>>>>>>>>>>>
@@ -279,8 +270,7 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                                             onPressed: () {
                                               // todo: Specifying the sensor type by adding values to the controller
                                               myModel.changeSensorType(
-                                                  sensorType:
-                                                      SensorType.jnSensor);
+                                                  sensorType: SensorType.jnSensor);
                                               myModel.changeVerification(
                                                   verified: false);
                                               // todo: adding the value to sensor list
@@ -294,10 +284,8 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                                               sensorStorage.addToJnSensor(
                                                  ServerController.sn(
                                                       sensorCount: index,
-                                                      sensorType:
-                                                          myModel.sensorType,
-                                                      verified:
-                                                          myModel.verified)
+                                                      sensorType: myModel.sensorType,
+                                                      verified: myModel.verified)
                                               );
                                               
                                                sensorStorage.changeAddButtonFlag(false);
@@ -332,28 +320,28 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                     }),
                   ),
                 )),
-                Consumer<SensorReadResultController>(
-                  builder: (context,storageController,_) {
-                    return Positioned(
-                        bottom: 10,
-                        right: 10,
-                        child: buttonSelect(
-                            buttonType: ButtonType.redirectionButton,
-                            onTap:
-                            
-                            () {
-                              storageController.lnSensorList[storageController.lnSensorList.length-1].verified&&
-                              storageController.jnSensorList[storageController.jnSensorList.length-1].verified?
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeScreen()),
-                              ):errorMessageFromReading();
-                              // :null;
-                            },
-                            context: context));
-                  }
-                )
+                // Consumer<SensorReadResultController>(
+                //   builder: (context,storageController,_) {
+                //     return Positioned(
+                //         bottom: 10,
+                //         right: 10,
+                //         child: buttonSelect(
+                //             buttonType: ButtonType.redirectionButton,
+                //             onTap:
+                //
+                //             () {
+                //               storageController.lnSensorList[storageController.lnSensorList.length-1].verified&&
+                //               storageController.jnSensorList[storageController.jnSensorList.length-1].verified?
+                //               Navigator.push(
+                //                 context,
+                //                 MaterialPageRoute(
+                //                     builder: (context) => const HomeScreen()),
+                //               ):errorMessageFromReading();
+                //               // :null;
+                //             },
+                //             context: context));
+                //   }
+                // )
               ],
             ),
           
@@ -551,7 +539,7 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: colorsList(
+                                  primary: colorsList(
                                       colorsList: ColorsLists.lightBlue))),
                           ElevatedButton(
                             onPressed: () {
@@ -563,7 +551,7 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                               style: TextStyle(color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
-                                backgroundColor:
+                                primary:
                                     colorsList(colorsList: ColorsLists.blue)),
                           )
                         ]);
@@ -665,7 +653,7 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                     return AlertDialog(
                         backgroundColor: Colors.black,
                         content: const Text(
-                          'Reading result',
+                          'Reading the result',
                           style: TextStyle(color: Colors.white),
                         ),
                         actions: [
@@ -687,7 +675,7 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: colorsList(
+                                  primary: colorsList(
                                       colorsList: ColorsLists.lightBlue))),
                           ElevatedButton(
                             onPressed: () {
@@ -699,7 +687,7 @@ class _SensorReadingSignalState extends State<SensorReadingSignal> {
                               style: TextStyle(color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
-                                backgroundColor:
+                                primary:
                                     colorsList(colorsList: ColorsLists.blue)),
                           )
                         ]);

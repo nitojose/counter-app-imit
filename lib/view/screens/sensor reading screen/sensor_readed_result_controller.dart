@@ -16,7 +16,7 @@ class SensorReadResultController with ChangeNotifier {
   void addToLnSensor(ServerController value){
     lnSensorList.add(value);
      notifyListeners();
-    log(lnSensorList[0].toString()+"index number from lane sensor controller");
+    log(lnSensorList[0].toString()+" index number from lane sensor controller");
      
   }
   void changeAddButtonFlag(bool val){

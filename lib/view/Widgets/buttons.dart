@@ -21,7 +21,7 @@ enum ButtonType {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         shape:const StadiumBorder(),
-        backgroundColor: colorsList(colorsList: buttonColor),
+        primary: colorsList(colorsList: buttonColor),
         elevation: 0
       ),
       child: Container(

@@ -8,35 +8,20 @@ class DatabaseController with ChangeNotifier {
   late Database _db;
   late List<SensorModel> deviceModel;
 
-  
   bool isLoading = false;
 
   void loading(){
-
-isLoading = true;
+    isLoading = true;
     notifyListeners();
   }
 
-
-  
-  
-  
-   Future refreshSensor() async {
+  Future refreshSensor() async {
     isLoading = true;
     deviceModel = await DatabaseHelper.instance.readAllSensor();
     // print(deviceModel[10].sensorCode);
     isLoading = true;
     notifyListeners();
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   Future<void> initializeDataBase() async {
     final dataBase = await openDatabase('deviceData.db', version: 1,

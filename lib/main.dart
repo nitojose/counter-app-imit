@@ -34,6 +34,7 @@ void main() async {
   server.listen((event) {
     sC.handleConnection(event);
   });
+
 }
 
 class MyApp extends StatelessWidget {
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
           // ChangeNotifierProvider(create: (_) => SensorReadingController()),
         ],
         child: MaterialApp(
-          title: 'Flutter Demo',
+          title: 'Package Counter',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),

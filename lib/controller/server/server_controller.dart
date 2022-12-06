@@ -6,11 +6,11 @@ import 'package:counter_iot/DB/db_helper.dart';
 import 'package:counter_iot/model/sensor_respose_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../model/db_model.dart';
 
 enum SensorType { lnSensor, jnSensor }
-ValueNotifier <String> listNot = ValueNotifier(""); 
+ValueNotifier<String> listNot = ValueNotifier("");
 
 class ServerController extends ChangeNotifier {
 String? tagId;
@@ -18,12 +18,13 @@ String? vehicleNumber;
 ServerController.sn(
       {required this.sensorType, required this.verified,this.sensorId,required this.sensorCount,this.vehicleNumber});
 String sensorIdList='';
-  
+
 // void changeSensorList(val){
 // sensorIdList.add(val);
 // notifyListeners();
 // }
   void handleConnection(Socket client){
+
     log('connect from : ${client.remoteAddress.address}: ${client.remoteAddress}');
     final val = client.listen(
       (Uint8List data) async {
@@ -33,36 +34,39 @@ String sensorIdList='';
         final message = String.fromCharCodes(data);
         
         //  changeSensorList(message);
-        
+
         if(message.contains('{')){
-          log('we get the message');
-          
+          log('Some message rcvd at TCP port');
 
           // RecentMoneySentResponse response;
           final responseTwo = RecentMoneySentResponse.fromJson(jsonDecode(message));
 
-          if(responseTwo.h!=null){
-          client.write(DateTime.now().toString());
-listNot.value=responseTwo.h!;
-          notifyListeners();
- 
-          }else{
+          if(responseTwo.h!=null){ //health packet
+            client.write(DateTime.now().toString());
+            //listNot.value=responseTwo.h!;
+            notifyListeners();
+            Fluttertoast.showToast(msg: 'Health packet received');
+          }else if(responseTwo.d!=null){ //device id and tag id packet
             log(responseTwo.d.toString());
-          listNot.value=responseTwo.d!;
-          tagId = responseTwo.t;
-          log(tagId.toString()+" from tag");
-          notifyListeners();
+            listNot.value=responseTwo.d!;
+            sensorId = responseTwo.d;
+            tagId = responseTwo.t;
+            log('Device ID:' + sensorId.toString()+ " , Tag ID: " + tagId.toString());
+            Fluttertoast.showToast(msg: 'Device ID:' + sensorId.toString() + " , Tag ID: " + tagId.toString());
+            notifyListeners();
+          }else if(responseTwo.dt!=null){ //system datetime request
+            String unixTime=DateTime.now().millisecondsSinceEpoch.toString();
+            Fluttertoast.showToast(msg: 'EPOCH  time is '+ unixTime);
 
+            //Push unixTime back to TCP socket
+            //....
           }
           
           notifyListeners();
 
-
         }else{
           listNot.value=message;
         }
-        
-
 
         sensorIdList=message;
         await Future.delayed(
@@ -81,8 +85,6 @@ listNot.value=responseTwo.h!;
         //   log(dbResponse[i].sensorCode);
         // }
         // ! pass the sensor value to the received index of list
-
-        
           
 
         // if (message == 'Knock, knock.') {
@@ -111,23 +113,18 @@ listNot.value=responseTwo.h!;
         client.close();
       },
     );
-  
 
   }
 
-
-//! sensor controller
-
-
+  //! sensor controller
   List<String> existingValJn=[];
   List<String> existingValLn=[];
   SensorType? sensorType;
   bool verified = false;
- String? sensorId='';
- int ?sensorCount;
+  String? sensorId='';
+  int ?sensorCount;
   // ! TAB count is used for get the count of the selected tab from sensor reading screen
   int tabCount = 0;
- 
 
   void changeSensorType({required SensorType sensorType}) {
     this.sensorType = sensorType;
